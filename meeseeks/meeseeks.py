@@ -1,4 +1,6 @@
 import os
+import sys
+import platform
 
 from PyQt5.QtCore import (QAbstractEventDispatcher, QAbstractNativeEventFilter,
                           QPoint, QRect, QSize, Qt)
@@ -7,7 +9,6 @@ from PyQt5.QtWidgets import (QAction, QApplication, QCheckBox, QDesktopWidget,
                              QGridLayout, QLabel, QMainWindow, QMenu,
                              QSizePolicy, QSpacerItem, QStyle, QSystemTrayIcon,
                              QWidget, qApp)
-from pyqtkeybind import keybinder
 
 
 class WinEventFilter(QAbstractNativeEventFilter):
@@ -28,9 +29,11 @@ class MainWindow(QMainWindow):
     tray_icon = None
     
     # Override the class constructor
-    def __init__(self):
+    def __init__(self, canvas):
         # Be sure to call the super class method
         super().__init__()
+
+        self.canvas = canvas
 
         self.setVisible(False)
     
@@ -59,16 +62,20 @@ class MainWindow(QMainWindow):
             hide - hide window
             exit - exit from application
         '''
+        activate = QAction("Activate", self)
         show_action = QAction("Show", self)
         quit_action = QAction("Exit", self)
         hide_action = QAction("Hide", self)
+        activate.triggered.connect(self.canvas.show)
         show_action.triggered.connect(self.show)
         hide_action.triggered.connect(self.hide)
         quit_action.triggered.connect(qApp.quit)
         tray_menu = QMenu()
+        tray_menu.addAction(activate)
         tray_menu.addAction(show_action)
         tray_menu.addAction(hide_action)
         tray_menu.addAction(quit_action)
+
         self.tray_icon.setContextMenu(tray_menu)
         self.tray_icon.show()
 
@@ -163,23 +170,25 @@ def main():
     import sys
 
     app = QApplication(sys.argv)
-    win = MainWindow()
 
     widget = MyWidget()
+    win = MainWindow(widget)
 
 
     def callback():
         widget.show()
 
-    keybinder.init()
-    keybinder.register_hotkey(win.winId(), "Ctrl+Shift+1", callback)
+    if 'Darwin' not in platform.system():
+        from pyqtkeybind import keybinder
+        keybinder.init()
+        keybinder.register_hotkey(win.winId(), "Ctrl+Shift+1", callback)
 
-    # Install a native event filter to receive events from the OS
-    win_event_filter = WinEventFilter(keybinder)
-    event_dispatcher = QAbstractEventDispatcher.instance()
-    event_dispatcher.installNativeEventFilter(win_event_filter)
+        # Install a native event filter to receive events from the OS
+        win_event_filter = WinEventFilter(keybinder)
+        event_dispatcher = QAbstractEventDispatcher.instance()
+        event_dispatcher.installNativeEventFilter(win_event_filter)
 
-    keybinder.unregister_hotkey(win.winId(), 0x0, 0x0)
+        keybinder.unregister_hotkey(win.winId(), 0x0, 0x0)
     sys.exit(app.exec())
 
     
