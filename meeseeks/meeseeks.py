@@ -31,25 +31,14 @@ class MainWindow(QMainWindow):
     # Override the class constructor
     def __init__(self, canvas):
         # Be sure to call the super class method
-        super().__init__()
+        super().__init__(None, Qt.WindowStaysOnTopHint)
 
         self.canvas = canvas
 
         self.setVisible(False)
     
-        self.setMinimumSize(QSize(480, 80))             # Set sizes
-        self.setWindowTitle("System Tray Application")  # Set a title
-        central_widget = QWidget(self)                  # Create a central widget
-        self.setCentralWidget(central_widget)           # Set the central widget
-    
-        grid_layout = QGridLayout(self)         # Create a QGridLayout
-        central_widget.setLayout(grid_layout)   # Set the layout into the central widget
-        grid_layout.addWidget(QLabel("Application, which can minimize to Tray", self), 0, 0)
-    
-        # Add a checkbox, which will depend on the behavior of the program when the window is closed
-        self.check_box = QCheckBox('Minimize to Tray')
-        grid_layout.addWidget(self.check_box, 1, 0)
-        grid_layout.addItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Expanding), 2, 0)
+        self.setMinimumSize(QSize(480, 80))
+        self.setWindowTitle("Settings - Coming Soon")
     
         # Init QSystemTrayIcon
         self.tray_icon = QSystemTrayIcon(self)
@@ -91,15 +80,14 @@ class MainWindow(QMainWindow):
     # Override closeEvent, to intercept the window closing event
     # The window will be closed only if there is no check mark in the check box
     def closeEvent(self, event):
-        if self.check_box.isChecked():
-            event.ignore()
-            self.hide()
-            self.tray_icon.showMessage(
-                "Tray Program",
-                "Application was minimized to Tray",
-                QSystemTrayIcon.Information,
-                2000
-            )
+        event.ignore()
+        self.hide()
+        self.tray_icon.showMessage(
+            "Tray Program",
+            "Application was minimized to Tray",
+            QSystemTrayIcon.Information,
+            2000
+        )
 
 class MyWidget(QWidget):
     def __init__(self):

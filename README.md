@@ -6,4 +6,6 @@ Grab attention on the desktop. Useful for video conferencing. Should work on Win
 
 ![screenshot](https://raw.githubusercontent.com/stevarino/meeseeks/master/screenshot.png)
 
+[Slides](https://docs.google.com/presentation/d/1KltjKdeh3bbd8GFR62A-GQD8Vj3DMEbKnEm2p95FczU/edit?usp=sharing)
+
 [Icon source](https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html#foreground.type=clipart&foreground.clipart=search&foreground.space.trim=1&foreground.space.pad=0.25&foreColor=rgba(96%2C%20125%2C%20139%2C%200)&backColor=rgb(139%2C%20195%2C%2074)&crop=0&backgroundShape=square&effects=none&name=meeseeks)
