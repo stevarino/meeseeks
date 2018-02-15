@@ -115,6 +115,10 @@ class MyWidget(QWidget):
         begin = self.begin
         end = self.end
 
+        diff = end - begin
+        if min(diff.x(), diff.y()) < offset * 2:
+            return
+
         if begin.x() > end.x():
             begin, end = QPoint(end.x(), begin.y()), QPoint(begin.x(), end.y())
         if begin.y() > end.y():
